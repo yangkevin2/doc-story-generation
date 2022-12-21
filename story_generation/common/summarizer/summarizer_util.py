@@ -14,7 +14,7 @@ def add_summarizer_args(parser):
     parser.add_argument('--summarizer-prompt-penalty', type=float, default=1, help='OPT control penalty for prompt tokens for summarizer, excluding stopwords/punc/names')
     parser.add_argument('--summarizer-frequency-penalty', type=float, default=1, help='frequency penalty for summarizer')
     parser.add_argument('--summarizer-presence-penalty', type=float, default=0, help='presence penalty for summarizer')
-    parser.add_argument('--summarizer-frequency-penalty-decay', type=float, default=0.98, help='frequency penalty decay for summarizer')
+    parser.add_argument('--summarizer-frequency-penalty-decay', type=float, default=0.98, help='frequency penalty decay for OPT summarizer')
     parser.add_argument('--max-tokens', type=int, default=64, help='max length for generation, not including prompt')
     parser.add_argument('--gpt3-model', type=str, default='text-davinci-002', help='gpt3 model or finetuned ckpt for GPT3Summarizer')
     parser.add_argument('--max-context-length', type=int, default=1024, help='max length for context to facilitate toy version')
