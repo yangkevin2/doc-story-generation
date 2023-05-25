@@ -1,11 +1,11 @@
 # DOC: Improving Long Story Coherence With Detailed Outline Control
 
-This repo contains code for DOC: Improving Long Story Coherence With Detailed Outline Control (https://arxiv.org/abs/2212.10077) by Kevin Yang, Dan Klein, Nanyun Peng, and Yuandong Tian. In this codebase we provide instructions for automatically generating longer stories (avg 3500+ words in our paper experiments). DOC's stories are judged by human annotators as substantially more coherent, relevant, and interesting compared to those written by our previous system, Re3 (https://github.com/yangkevin2/emnlp22-re3-story-generation). 
+This repo contains code for DOC: Improving Long Story Coherence With Detailed Outline Control (https://arxiv.org/abs/2212.10077, ACL 2023) by Kevin Yang, Dan Klein, Nanyun Peng, and Yuandong Tian. In this codebase we provide instructions for automatically generating longer stories (avg 3500+ words in our paper experiments). DOC's stories are judged by human annotators as substantially more coherent, relevant, and interesting compared to those written by our previous system, Re3 (https://github.com/yangkevin2/emnlp22-re3-story-generation). 
 
 ## Installation / Data
 
 (1) Install Python 3.8.15 and PyTorch 1.13.1 (slightly older/newer versions are probably also fine for both).
-(2) Install the remaining requirements via `pip install -r requirements.txt`. You may need to also run `pip install -U sentence-transformers` if you get crashes related to `huggingface_hub.snapshot_download` later.
+(2) Install the remaining requirements via `pip install -r requirements.txt`. You may need to also run `pip install -U sentence-transformers` if you get crashes related to `huggingface_hub.snapshot_download` later. If you get some issue with numpy versions, try version 1.22.4. 
 (3) Install this repo with `pip install -e .`.
 
 Also run `export OPENAI_API_KEY=$YOUR_API_KEY` in your terminal so that the code can call the GPT3 API with your key. 
@@ -61,22 +61,22 @@ This option may be slower (in runtime) depending on your physical location, sinc
 
 Once you have a key, you can specify `--alpa-url https://opt.alpa.ai --alpa-key YOUR_KEY` in the main story command below.
 
-#### 2. Self-Serve (fast + high-quality; need a lot of compute)
+#### 2. Self-Serve (faster + high-quality; need a lot of compute)
 
-If you have the compute, you can request the weights from Meta (https://forms.gle/BDB2i44QwCr2mCJN6) and serve it yourself using Alpa. This is the best (fastest-running + high-quality) option if you can do it. 
+If you have the compute, you can request the weights from Meta (https://forms.gle/BDB2i44QwCr2mCJN6) and serve it yourself using Alpa. This is the best (high-quality and reasonable speed) option if you can do it. 
 
 Follow the installation and serving instructions at https://alpa.ai/install.html and https://alpa.ai/tutorials/opt_serving.html respectively.
 The newest version of Alpa should work, but we also froze the version we used at https://github.com/yangkevin2/doc-alpa in case it's useful. 
 
 Once you have it set up, specify `--alpa-url YOUR_SERVER_URL` in the main story command below (e.g., in the format `http://0.0.0.0:8001`). 
 
-Alternatively you can use a smaller OPT model, though this will result in noticeably worse quality. Very small models could also lead to crashes since we didn't extensively test the edge cases where all the generated continuations get rejected by our filters (you can set `--skip-threshold -10000` to avoid this happening). 
+Alternatively you can use a smaller OPT model, though this will result in noticeably worse quality. 
 
-#### 3. GPT3-175B (easy to get started; worse quality)
+#### 3. GPT3-175B (easiest to get started and fastest; worse quality)
 
-Just use GPT3-175B instead, which means turning off our detailed controller. You will on average get noticeably worse faithfulness to the plan/outline.
+Just use GPT3-175B instead, which means turning off our detailed controller. You will on average get noticeably worse faithfulness to the plan/outline, but it'll be quite a bit faster.
 
-To do this, set `--extension-method gpt3` in the main story command below. 
+To do this, set `--extension-method gpt3` in the main story command below. This will use the base `davinci` model (i.e., not one of the instruction-tuned GPT3.5/GPT4 models, which use a different prompting interface and aren't currently supported; these instruction-tuned models also often write in a somewhat different style). 
 
 It's not too expensive as far as the GPT3 API is concerned; you'll probably spend less than a dollar over the course of the story. 
 
@@ -107,6 +107,10 @@ Main story generation arguments are also compiled in `scripts/main.py`; follow t
 * If you run out of GPU memory you can try decreasing `--fudge-batch-size` to e.g. 32 (or less), or retrain smaller rerankers/controllers according to the instructions at the bottom of the README. 
 * Remove `--no-editor` to turn off the Edit module inherited from Re3 (not heavily tested; DOC doesn't use it in our main experiments)
 * Set `--log-level` to be something between 21 and 25 to vary the verbosity of logging (higher = less verbose; defaults to 24). 
+
+### Note About Crashes
+
+Using very small OPT models could lead to crashes since we didn't extensively test the edge cases where all the generated continuations get rejected by our filters (you can set `--skip-threshold -10000` to avoid this happening). This may sometimes happen with GPT3 as well when the detailed controller is off. This crash never happened in our main experiments using OPT-175B. 
 
 ## Baselines
 
