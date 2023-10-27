@@ -1,5 +1,7 @@
 # DOC: Improving Long Story Coherence With Detailed Outline Control
 
+Update 10/26/23: See https://github.com/facebookresearch/doc-storygen-v2 for a version of the code with prompts supporting using newer chat models (e.g., LLaMA-2, ChatGPT). It follows the same high level structure, but isn't exactly the same behavior in all places (e.g., some pieces are removed for simplicity, and some heuristic checks are no longer necessary); our main goal with the rewite was to make the code easier to work with / modify.
+
 This repo contains code for DOC: Improving Long Story Coherence With Detailed Outline Control (https://arxiv.org/abs/2212.10077, ACL 2023) by Kevin Yang, Dan Klein, Nanyun Peng, and Yuandong Tian. In this codebase we provide instructions for automatically generating longer stories (avg 3500+ words in our paper experiments). DOC's stories are judged by human annotators as substantially more coherent, relevant, and interesting compared to those written by our previous system, Re3 (https://github.com/yangkevin2/emnlp22-re3-story-generation). 
 
 ## Installation / Data
